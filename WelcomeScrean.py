@@ -2,13 +2,11 @@ import customtkinter as ctk
 import Style as st
 from PIL import Image, ImageDraw, ImageFont
 
-class WelcomeScreen(ctk.CTk):
-    def __init__(self):
-        super().__init__()
+class WelcomeScreen(ctk.CTkFrame):
+    def __init__(self,master, switch_callback):
+        super().__init__(master)
+        self.callback = switch_callback
         self.assets = st.AppStyles()
-
-        self.geometry("375x812")
-        self.title("Atrium")
         
         Cizel65 = ImageFont.truetype(self.assets.font_path_Cinzel, 65)
 
@@ -22,9 +20,9 @@ class WelcomeScreen(ctk.CTk):
         self.background = ctk.CTkLabel(self,text="", image=bg_image)
         self.background.pack()
 
-        self.BtnEnter = ctk.CTkButton(self, text="", image=self.assets.BtnEnter, hover=False, command=1, border_width=0, width=327, height=55, fg_color="#040D20", corner_radius=0)
+    
+        self.BtnEnter = ctk.CTkButton(self, text="", image=self.assets.BtnEnter, hover=False, border_width=0, width=327, height=55, fg_color="#040D20", corner_radius=0)
         self.BtnEnter.place(y=770, x=self.assets.mw, anchor="center")
-
-if __name__ == "__main__":
-    app = WelcomeScreen()
-    app.mainloop()
+        self.BtnEnter.bind("<Button-1>", self.on_click)
+    def on_click(self, event):
+        self.callback()

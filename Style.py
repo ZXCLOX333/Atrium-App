@@ -37,10 +37,10 @@ class AppStyles:
         self.Crumbs = ctk.CTkFont(family="Montserrat", size=12)
 
         self.H1_Pil = ImageFont.truetype(font_path_GreatVibes,  34)
-        self.H2_Pil = ImageFont.truetype(font_path_Montserrat, 22)
-        self.H3_Pil = ImageFont.truetype(self.font_path_Cinzel, 30)
-        self.Body_Pil = ImageFont.truetype(font_path_Montserrat, 16)
-        self.Crumbs_Pil =  ImageFont.truetype(font_path_Montserrat, 12)
+        self.H2_Pil = ImageFont.truetype(font_path_Montserrat, 24)
+        self.H3_Pil = ImageFont.truetype(self.font_path_Cinzel, 32)
+        self.Body_Pil = ImageFont.truetype(font_path_Montserrat, 18)
+        self.Crumbs_Pil =  ImageFont.truetype(font_path_Montserrat, 14)
 
     def _load_images(self):
         self.rawBgGradient = Image.open(os.path.join(self.current_path, "Imgs", "Bg.png"))
