@@ -10,7 +10,7 @@ class WelcomeScreen(ctk.CTkFrame):
         
         Cizel65 = ImageFont.truetype(self.assets.font_path_Cinzel, 65)
 
-        bg = self.assets.rawBgGradient.copy()
+        bg = self.assets.raw_images["Bg.png"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((self.assets.mw+30, 207), "Wellcome to", fill=self.assets.White, font=self.assets.H1_Pil,anchor="mt")
         draw.text((self.assets.mw+30, 315), "ATRIUM", fill=self.assets.Gold, font=Cizel65,anchor="mt")
@@ -21,8 +21,9 @@ class WelcomeScreen(ctk.CTkFrame):
         self.background.pack()
 
     
-        self.BtnEnter = ctk.CTkButton(self, text="", image=self.assets.BtnEnter, hover=False, border_width=0, width=327, height=55, fg_color="#040D20", corner_radius=0)
+        self.BtnEnter = ctk.CTkButton(self, text="", image=self.assets.images["BtnEnter"], hover=False, border_width=0, width=327, height=55, fg_color="#040D20", corner_radius=0)
         self.BtnEnter.place(y=770, x=self.assets.mw, anchor="center")
         self.BtnEnter.bind("<Button-1>", self.on_click)
+
     def on_click(self, event):
         self.callback()
