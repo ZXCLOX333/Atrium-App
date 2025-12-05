@@ -57,6 +57,9 @@ class AppStyles:
                         "Crown.png": (13, 12),
                         "Home.png": (19, 19),
                         "AI.png": (21, 27),
+                        "Exit.png": (46, 18),
+                        "AddFile.png": (32, 32),
+                        "Microphone.png": (27, 32),
                         #films
                         "Five.png":(156,178),
                         "Zootopia.png":(156,178),

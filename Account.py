@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import Style as st
 from PIL import Image, ImageDraw, ImageFont
+import Main as mn
 
 class AccountPage(ctk.CTkFrame):
     def __init__(self,master, switch_callback):
@@ -8,8 +9,10 @@ class AccountPage(ctk.CTkFrame):
         self.callback = switch_callback
         self.assets = st.AppStyles()
         Montserrat_Medium_User = ImageFont.truetype(self.assets.font_path_Montserrat_Medium, 28)
+
         User_Name = "Oleksandr  Kostyrko"
         User_Plan = "Premium Plan"
+        
         bg = self.assets.raw_images["Bg.png"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((self.assets.mw+40, 90), "ATRIUM", fill=self.assets.White, font=self.assets.H3_Pil,anchor="mt")
@@ -21,11 +24,10 @@ class AccountPage(ctk.CTkFrame):
         self.background.pack()
 
         x,y=25,65
-        w,h=41,41
         self.BtnSupport = ctk.CTkLabel(self, text="", image=self.assets.images["Support"],font=self.assets.Crumbs,cursor="hand2")
         self.BtnSupport.place(x=x,y=y)
+        self.BtnSupport.bind("<Button-1>", lambda event: self.callback("Support"))
         x,y=315,65
-        w,h=32,41
         self.BtnAddAccount = ctk.CTkLabel(self, text="", image=self.assets.images["AddAccount"],font=self.assets.Crumbs,cursor="hand2")
         self.BtnAddAccount.place(x=x,y=y)
 
