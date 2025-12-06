@@ -13,12 +13,13 @@ import DetailsPage as dp
 import AIHelperPage as ai
 import Support as sp
 import Account as ac
+import secrets_config as sc
 
-GEMINI_API_KEY = "AIzaSyBwVJoBTooJiV_0h7PXf8M33_TpouHaQeI" 
+GEMINI_API_KEY = sc.API_KEY 
 
 class MainApp(ctk.CTk):
     def __init__(self):
-        super().__init__(fg_color="#040D20") 
+        super().__init__(fg_color="#000000") 
         self.assets = st.AppStyles()
         
         self.geometry("375x812")
@@ -33,6 +34,7 @@ class MainApp(ctk.CTk):
         self.list_frames["LogIn"] = li.LogInApp(self, switch_callback=lambda: self.show_menu("Account")) 
         self.list_frames["Support"] = sp.SupportPage(self, switch_callback=self.show_menu)
         self.list_frames["Account"] = ac.AccountPage(self, switch_callback=self.show_menu)
+        self.list_frames["AIHelper"] = ai.AiHelperPage(self, switch_callback=self.show_menu)
 
         self.setup_navigation()
         self.setup_message_bar()
@@ -43,19 +45,18 @@ class MainApp(ctk.CTk):
     def setup_gemini(self):
         try:
             genai.configure(api_key=GEMINI_API_KEY)
-            self.model = genai.GenerativeModel('gemini-1.5-flash') 
+            self.model = genai.GenerativeModel('gemini-2.0-flash') 
             self.chat_session = self.model.start_chat(history=[])
             print("Gemini успішно підключено!")
         except Exception as e:
             print(f"Помилка підключення Gemini: {e}")
 
     def ask_gemini_thread(self, user_text):
-        """Функція, яка працює у фоновому потоці"""
         try:
             response = self.chat_session.send_message(user_text)
             ai_text = response.text
             self.after(0, lambda: self.add_message(ai_text, sender="ai"))
-            
+        
         except Exception as e:
             error_msg = "Sorry, I have connection issues."
             print(f"Gemini Error: {e}")
@@ -66,8 +67,8 @@ class MainApp(ctk.CTk):
             self, 
             fg_color="transparent", 
             width=375, 
-            height=580,             
-            scrollbar_button_color="#040D20",      
+            height=540,             
+            scrollbar_button_color="#000000",      
             scrollbar_button_hover_color="#040D20"
         )
 
@@ -81,7 +82,7 @@ class MainApp(ctk.CTk):
             margin = (50, 20)    
         else: 
             align = "w"          
-            bg_color = "#000000" 
+            bg_color = "#040D31" 
             text_color = "#E0E0E0"
             margin = (20, 50)    
 
@@ -113,7 +114,7 @@ class MainApp(ctk.CTk):
     def setup_navigation(self):
         self.nav_bar = ctk.CTkFrame(self, height=80, corner_radius=0, fg_color="black")
         self.create_nav_btn(self.nav_bar, "Home", "Home.png", lambda: self.show_menu("Welcome"))
-        self.create_nav_btn(self.nav_bar, "AI", "AI.png", lambda: self.show_menu("Account"))
+        self.create_nav_btn(self.nav_bar, "AI", "AI.png", lambda: self.show_menu("AIHelper"))
 
     def create_nav_btn(self, parent, text, image_key, command):
         btn_frame = ctk.CTkFrame(parent, fg_color="transparent")
@@ -197,7 +198,7 @@ class MainApp(ctk.CTk):
         if frame_name in screens_with_chat:
             self.msg_bar.place(relx=0.5, rely=0.98, relwidth=0.9, anchor="s") 
             self.msg_bar.lift()
-            self.chat_frame.place(x=0, y=100, relwidth=1, relheight=0.75) 
+            self.chat_frame.place(x=0, y=110, relwidth=1, relheight=0.75) 
             self.chat_frame.lift()
         else:
             self.msg_bar.place_forget()
