@@ -26,8 +26,6 @@ class MainApp(ctk.CTk):
         self.geometry("375x812")
         self.title("Atrium")
 
-        # --- ЗБЕРЕЖЕННЯ СЕСІЇ ---
-        # Ця змінна зберігатиме інформацію про користувача після логіну
         self.current_user = None 
 
         self.setup_gemini()
@@ -40,8 +38,7 @@ class MainApp(ctk.CTk):
         self.list_frames = {}
         self.list_frames["Welcome"] = ws.WelcomeScreen(self, switch_callback=lambda: self.show_menu("LogIn"))
         self.list_frames["Main"] = mp.MainPageGUI(self, switch_callback=self.show_menu)
-        
-        # Передаємо 'self' як master, щоб LogInApp мав доступ до self.current_user
+
         self.list_frames["LogIn"] = li.LogInApp(self, switch_callback=self.show_menu) 
         self.list_frames["SignUp"] = su.SignUpGUI(self, switch_callback=self.show_menu) 
         self.list_frames["Support"] = sp.SupportPage(self, switch_callback=self.show_menu)
@@ -51,8 +48,6 @@ class MainApp(ctk.CTk):
         self.list_frames["Forgot"] = fp.ForgotPasswordApp(self, switch_callback=self.show_menu)
 
         self.show_menu("Welcome")
-
-    # ... [Методи налаштування Gemini та чату залишаються без змін] ...
     
     def setup_gemini(self):
         try:
@@ -213,7 +208,7 @@ class MainApp(ctk.CTk):
             self.msg_bar.place_forget()
             self.chat_frame.place_forget()
 
-if __name__ == "__main__":
+if __name__ == "__main__)":
     app = MainApp()
     app.resizable(False, False)
     app.mainloop()

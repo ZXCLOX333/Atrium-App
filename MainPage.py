@@ -2,12 +2,15 @@ import customtkinter as ctk
 from PIL import ImageDraw
 
 import Style as st
+import config as cfg
+import Database as db
 
 class MainPageGUI(ctk.CTkFrame):
 
     def __init__(self, master, switch_callback):
         super().__init__(master)
         self.assets = st.AppStyles()
+        self.db_manager = db.DatabaseManager()
         self.callback = switch_callback
 
         bg = self.assets.raw_images["Bg.png"].copy()
@@ -36,20 +39,35 @@ class MainPageGUI(ctk.CTkFrame):
         movies_frame.pack(fill="both", expand=True)
         movies_frame.place(x=0, y=150, relwidth=1, relheight=0.7)
 
-        films_list = [name for name, size in self.assets.image_config.items() if size == (156, 178)]
+        movies_data = self.db_manager.get_all_movies()
 
         row = 0
         col = 0
 
-        for film_name in films_list:
-            btn = ctk.CTkLabel(movies_frame, text="", image=self.assets.images[film_name], cursor="hand2")
+
+        for movie in movies_data:
+            title = movie[0]
+            img_name = movie[1] 
+            price = movie[2]
+            desc = movie[3]
+            poster_img = self.assets.get_poster(img_name)
+
+            if poster_img is None:
+                print(f"Файл {img_name} не знайдено в папці Imgs!")
+                continue 
+            btn = ctk.CTkLabel(
+                movies_frame, 
+                text="", 
+                image=poster_img, 
+                cursor="hand2"
+            )
             btn.grid(row=row, column=col, padx=16, pady=16)
-            btn.bind("<Button-1>", lambda event, f=film_name:self.on_film_click(f))
+            btn.bind("<Button-1>", lambda event, m=movie: self.on_movie_click(m))
             if col == 1:
                 col = 0
                 row += 1
             else:
                 col += 1
 
-    def on_click(self, event):
-        self.callback()
+    def on_movie_click(self, movie_data):
+        self.callback("Details", movie_data)

@@ -45,50 +45,37 @@ class AppStyles:
         self.Crumbs_Pil =  ImageFont.truetype(self.font_path_Montserrat, 14)
 
     def _load_images(self):
-        self.image_config = {"Bg.png": (375, 812),
-                        #buttons
-                        "BtnEnter.png": (327, 55),
-                        "BtnBuy.png": (327, 55),
-                        "BtnJoin.png": (327, 55),
-                        #icons
-                        "Support.png": (41, 41),
-                        "Account.png": (32, 41),
-                        "AddAccount.png": (32, 41),
-                        "Crown.png": (13, 12),
-                        "Home.png": (19, 19),
-                        "AI.png": (21, 27),
-                        "Exit.png": (46, 18),
-                        "AddFile.png": (32, 32),
-                        "Microphone.png": (27, 32),
-                        #films
-                        "Five.png":(156,178),
-                        "Zootopia.png":(156,178),
-                        "Tramp.png":(156,178),
-                        "Poppers.png":(156,178),
-                        "Night.png":(156,178),
-                        "Alvin.png":(156,178),
-                        "JecyChan.png":(156,178),
-                        "Titanic.png":(156,178),
-                        "Game of thrones.png":(156,178),
-                        "MazeRunner.png":(156,178),
-                        "Dragon.png":(156,178),
-                        "Pirates.png":(156,178),
-                        "it.png":(156,178),
-                        "Dedpool.png":(156,178)
-                        }
+        self.image_config = {
+            "Bg.png": (375, 812),
+            "BtnEnter.png": (327, 55),
+            "Home.png": (25, 25),
+            "AI.png": (25, 25),
+            "Microphone.png": (25, 25),
+            "AddFile.png": (25, 25),
+            "Account.png": (32, 41),
+            "Exit.png": (42, 18),
+        }
 
-        self.images = {} 
-        self.raw_images = {} 
+        self.images = {}
+        self.raw_images = {}
 
         for filename, size in self.image_config.items():
-            raw_img = Image.open(os.path.join(self.current_path, "Imgs", filename))
+            self._load_single_image(filename, size)
+
+    def _load_single_image(self, filename, size):
+        try:
+            path = os.path.join(self.current_path, "Imgs", filename)
+            raw_img = Image.open(path)
             self.raw_images[filename] = raw_img
+            self.images[filename] = ctk.CTkImage(light_image=raw_img, size=size)
+        except Exception as e:
+            print(f"Помилка завантаження {filename}: {e}")
 
-            ctk_img = ctk.CTkImage(light_image=raw_img, dark_image=raw_img, size=size)
-            self.images[filename] = ctk_img
-
-            key_name = filename.replace(".png", "") 
-            self.images[key_name] = ctk_img
+    def get_poster(self, filename):
+        if filename in self.images:
+            return self.images[filename]
+        self._load_single_image(filename, (156, 178))
+        return self.images.get(filename)
 
     def camuflage(self, x,y,w,h):
 

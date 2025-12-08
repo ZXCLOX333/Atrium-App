@@ -1,6 +1,9 @@
 import customtkinter as ctk
 from PIL import ImageDraw
+
 import Style as st
+import config as cfg
+import Database as db
 
 class DetailsPageGUI(ctk.CTkFrame):
 
@@ -8,12 +11,16 @@ class DetailsPageGUI(ctk.CTkFrame):
         super().__init__(master)
         assets = st.AppStyles()
 
-        bg = assets.raw_images["Bg.png"].copy()
+        self.set_movie_data()
+        
+        
 
+
+        bg = assets.raw_images["Bg.png"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((assets.mw + 40, 60), text='A T R I U M', font=assets.H3_Pil, anchor='mt')
         draw.text((210, 130), text='film', font=assets.H1_Pil)
-        draw.text((200, 210), text='$6.0', font=assets.H2_Pil)
+        draw.text((200, 210), text=f'${price}', font=assets.H2_Pil)
 
         bg_image = ctk.CTkImage(light_image=bg, size=(375, 812))
         bgLabel = ctk.CTkLabel(self, image=bg_image, text='')
@@ -35,4 +42,12 @@ class DetailsPageGUI(ctk.CTkFrame):
         
     def on_click(self, event):
         self.callback()
-  
+
+
+        
+if __name__ == "__main__":
+    app = ctk.CTk()
+    app.geometry("375x812")
+    details_page = DetailsPageGUI(app, switch_callback=lambda: print("Back to main"))
+    details_page.pack(fill="both", expand=True)
+    app.mainloop()
