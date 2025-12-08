@@ -118,8 +118,8 @@ class MainApp(ctk.CTk):
 
     def setup_navigation(self):
         self.nav_bar = ctk.CTkFrame(self, height=80, corner_radius=0, fg_color="black")
-        self.create_nav_btn(self.nav_bar, "Home", "Home.png", lambda: self.show_menu("Main"))
-        self.create_nav_btn(self.nav_bar, "AI", "AI.png", lambda: self.show_menu("AIHelper"))
+        self.create_nav_btn(self.nav_bar, "Home", "Home", lambda: self.show_menu("Main"))
+        self.create_nav_btn(self.nav_bar, "AI", "AI", lambda: self.show_menu("AIHelper"))
 
     def create_nav_btn(self, parent, text, image_key, command):
         btn_frame = ctk.CTkFrame(parent, fg_color="transparent")
@@ -144,14 +144,14 @@ class MainApp(ctk.CTk):
         self.message_entry.bind("<Return>", self.send_user_message)
 
         btn_mic = ctk.CTkButton(
-            self.msg_bar, text="", image=self.assets.images["Microphone.png"], 
+            self.msg_bar, text="", image=self.assets.images["Microphone"], 
             fg_color="transparent", hover_color="#1A1A1A", width=40, height=40,
             command=self.start_voice_input 
         )
         btn_mic.pack(side="right", padx=(0, 10))
 
         btn_add = ctk.CTkButton(
-            self.msg_bar, text="", image=self.assets.images["AddFile.png"], 
+            self.msg_bar, text="", image=self.assets.images["AddFile"], 
             fg_color="transparent", hover_color="#1A1A1A", width=40, height=40,
             command=self.open_file_explorer 
         )
@@ -208,7 +208,13 @@ class MainApp(ctk.CTk):
             self.msg_bar.place_forget()
             self.chat_frame.place_forget()
 
-if __name__ == "__main__)":
+        if frame_name == "Details":
+            self.list_frames["Details"].update_info()
+
+        if frame_name in self.list_frames:
+            self.list_frames[frame_name].pack(fill="both", expand=True)
+
+if __name__ == "__main__":
     app = MainApp()
     app.resizable(False, False)
     app.mainloop()

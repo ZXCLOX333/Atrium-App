@@ -8,7 +8,7 @@ class SupportPage(ctk.CTkFrame):
         self.callback = switch_callback
         self.assets = st.AppStyles()
 
-        bg = self.assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((self.assets.mw + 40, 90), "ATRIUM", fill=self.assets.White, font=self.assets.H3_Pil, anchor="mt")
         
@@ -16,13 +16,13 @@ class SupportPage(ctk.CTkFrame):
         self.background = ctk.CTkLabel(self, text="", image=bg_image)
         self.background.place(x=0, y=0, relwidth=1, relheight=1)
 
-        self.BtnAccount = ctk.CTkLabel(self, text="", image=self.assets.images["Account.png"], cursor="hand2")
+        self.BtnAccount = ctk.CTkLabel(self, text="", image=self.assets.images["Account"], cursor="hand2")
         self.BtnAccount.place(x=315, y=65)
         self.BtnAccount.bind("<Button-1>", lambda event: self.callback("Account"))
 
-        self.BtnExit = ctk.CTkLabel(self, text="", image=self.assets.images["Exit.png"], cursor="hand2", height=18)
+        self.BtnExit = ctk.CTkLabel(self, text="", image=self.assets.images["Exit"], cursor="hand2", height=18)
         self.BtnExit.place(x=20, y=77)
         self.BtnExit.bind("<Button-1>", self.on_click)
 
     def on_click(self, event):
-        self.callback("Account")
+        self.callback("Main")

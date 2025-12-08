@@ -4,7 +4,7 @@ class DatabaseManager:
     def __init__(self):
         self.conn_str = (
             "Driver={SQL Server};" 
-            "Server=DESKTOP-5TIDMAG\SQLEXPRESS"  
+            "Server=DESKTOP-5TIDMAG\SQLEXPRESS;"  
             "Database=AtriumDB;"
             "Trusted_Connection=yes;"
         )
@@ -46,15 +46,16 @@ class DatabaseManager:
         try:
             conn = pyodbc.connect(self.conn_str)
             cursor = conn.cursor()
-            query = "SELECT Title, ImageFileName, Price, Description FROM Movies WHERE Title = ?"
-            cursor.execute(query, (title,))
-            movies = cursor.fetchone()
+            query = "SELECT Title, ImageFileName, Price, Description FROM Movies WHERE Title LIKE ?"
+            cursor.execute(query, (f"%{title}%",))
+            
+            movie = cursor.fetchone()
             conn.close()
-            return movies
+            return movie
         except Exception as e:
             print(f"Помилка: {e}")
-            return []
-
+            return None 
+        
 if __name__ == "__main__":
     db = DatabaseManager()
     print("Тестуємо підключення...")

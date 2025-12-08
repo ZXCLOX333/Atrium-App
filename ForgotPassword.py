@@ -8,7 +8,7 @@ class ForgotPasswordApp(ctk.CTkFrame):
         self.callback = switch_callback
         self.assets = st.AppStyles()
 
-        bg = self.assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((self.assets.mw+30, 207), "Forgot Password", fill=self.assets.White, font=self.assets.H1_Pil,anchor="mt")
         draw.text((30, 400), "Email", fill=self.assets.LightGray, font=self.assets.Crumbs_Pil,anchor="lt")

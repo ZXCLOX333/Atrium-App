@@ -10,7 +10,7 @@ class WelcomeScreen(ctk.CTkFrame):
         
         Cizel65 = ImageFont.truetype(self.assets.font_path_Cinzel, 65)
 
-        bg = self.assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((self.assets.mw+30, 207), "Wellcome to", fill=self.assets.White, font=self.assets.H1_Pil,anchor="mt")
         draw.text((self.assets.mw+30, 315), "ATRIUM", fill=self.assets.Gold, font=Cizel65,anchor="mt")

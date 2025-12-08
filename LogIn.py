@@ -12,7 +12,7 @@ class LogInApp(ctk.CTkFrame):
         self.master = master # Зберігаємо посилання на MainApp
 
         # --- Фон ---
-        bg = self.assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
         # Перекладені тексти
         draw.text((self.assets.mw+30, 207), "Welcome back.", fill=self.assets.White, font=self.assets.H1_Pil, anchor="mt")

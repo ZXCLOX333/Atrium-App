@@ -1,53 +1,58 @@
 import customtkinter as ctk
-from PIL import ImageDraw
-
 import Style as st
-import config as cfg
-import Database as db
+import config as cfg 
+from PIL import Image, ImageDraw, ImageFont
 
 class DetailsPageGUI(ctk.CTkFrame):
 
     def __init__(self, master, switch_callback):
-        super().__init__(master)
-        assets = st.AppStyles()
+        super().__init__(master, fg_color="#040D20")
+        self.assets = st.AppStyles()
+        self.callback = switch_callback
 
-        self.set_movie_data()
-        
-        
-
-
-        bg = assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
-        draw.text((assets.mw + 40, 60), text='A T R I U M', font=assets.H3_Pil, anchor='mt')
-        draw.text((210, 130), text='film', font=assets.H1_Pil)
-        draw.text((200, 210), text=f'${price}', font=assets.H2_Pil)
-
+        draw.text((self.assets.mw + 40, 70), "ATRIUM", fill=self.assets.White, font=self.assets.H3_Pil, anchor="mt")
+        
         bg_image = ctk.CTkImage(light_image=bg, size=(375, 812))
-        bgLabel = ctk.CTkLabel(self, image=bg_image, text='')
-        bgLabel.pack()
+        self.background = ctk.CTkLabel(self, text="", image=bg_image)
+        self.background.place(x=0, y=0, relwidth=1, relheight=1)
 
-        exit_img = ctk.CTkImage(light_image=(assets.raw_images['Exit.png'].copy()), size=(42, 18))
-        labelExit = ctk.CTkButton(self, hover_color='black',width=42, height=18, fg_color='black',bg_color='black', image=exit_img, text='', cursor='hand2')
-        labelExit.place(x=20,y=50)
+        self.BtnAccount = ctk.CTkLabel(self, text="", image=self.assets.images["Account"], cursor="hand2")
+        self.BtnAccount.place(x=315, y=45)
+        self.BtnAccount.bind("<Button-1>", lambda event: self.callback("Account"))
 
-        account_img = ctk.CTkImage(light_image=(assets.raw_images["Account.png"].copy()), size=(32, 41))
-        label_account = ctk.CTkLabel(self, image=account_img, text='')
-        label_account.place(x=320, y=40)
+        self.BtnExit = ctk.CTkLabel(self, text="", image=self.assets.images["Exit"], cursor="hand2", height=18)
+        self.BtnExit.place(x=20, y=60)
+        self.BtnExit.bind("<Button-1>", self.on_click)
 
-        film_label = ctk.CTkLabel(self,width=156,height=178, fg_color='#071227', text='')
-        film_label.place(x=10,y=100)
-
-        description = ctk.CTkLabel(self,text='', bg_color='#071227', fg_color='#071227', text_color='white')
-        description.place(x=0, y=280, relwidth=1, relheight=0.6)
         
+        self.lbl_title = ctk.CTkLabel(self, text="", font=self.assets.H1, text_color=self.assets.Gold, image=self.assets.camuflage(170,130,100,70)
+        )
+        self.lbl_title.place(x=170, y=130, anchor="nw")
+
+
+        self.lbl_price = ctk.CTkLabel(self, text="", font=self.assets.H2, text_color="white", image=self.assets.camuflage(200,210,100,50)
+        )
+        self.lbl_price.place(x=170, y=210, anchor="nw")
+
+        self.lbl_desc = ctk.CTkLabel(self, text="", font=self.assets.Body, text_color="white",wraplength=350,justify="left",anchor="nw")
+        self.lbl_desc.place(x=0, y=280, relwidth=1, relheight=0.6)
+
+        self.lbl_image = ctk.CTkLabel(self, text="", width=156, height=178)
+        self.lbl_image.place(x=10, y=100)
+
+    def update_info(self):
+        self.lbl_title.configure(text=cfg.FilmName)
+        self.lbl_price.configure(text=f"${cfg.Price}")
+        self.lbl_desc.configure(text=cfg.Description)
+        img_name = cfg.ImageFileName
+        new_img = self.assets.get_poster(img_name) 
+        
+        if new_img:
+            self.lbl_image.configure(image=new_img)
+        else:
+            print(f"Не вдалося завантажити постер: {img_name}")
+
     def on_click(self, event):
-        self.callback()
-
-
-        
-if __name__ == "__main__":
-    app = ctk.CTk()
-    app.geometry("375x812")
-    details_page = DetailsPageGUI(app, switch_callback=lambda: print("Back to main"))
-    details_page.pack(fill="both", expand=True)
-    app.mainloop()
+        self.callback("Main")

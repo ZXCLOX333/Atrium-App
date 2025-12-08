@@ -13,7 +13,7 @@ class MainPageGUI(ctk.CTkFrame):
         self.db_manager = db.DatabaseManager()
         self.callback = switch_callback
 
-        bg = self.assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
         draw.text((self.assets.mw+45,50), 'A T R I U M', font=self.assets.H3_Pil, anchor='mt')
         bg_img = ctk.CTkImage(light_image=bg, size=(375,812))
@@ -30,9 +30,10 @@ class MainPageGUI(ctk.CTkFrame):
         self.BtnAccount.place(x=x,y=y)
         self.BtnAccount.bind("<Button-1>", lambda event: self.callback("Account"))
 
-        enter_search = ctk.CTkEntry(self,placeholder_text_color='white', bg_color='#071227',text_color='white', placeholder_text='Search 🔍', fg_color="#071227",width=350, height=35, border_color=self.assets.Gold)
-        enter_search.place(x=13, y=110)
-
+        self.enter_search = ctk.CTkEntry(self,placeholder_text_color='white', bg_color='#071227',text_color='white', placeholder_text='Search 🔍', fg_color="#071227",width=350, height=35, border_color=self.assets.Gold)
+        self.enter_search.place(x=13, y=110)
+        self.enter_search.bind("<Return>", self.on_search)
+                               
         movies_frame = ctk.CTkScrollableFrame(self, width=375, height=600, fg_color='#0B121F', border_width=0,
                                               corner_radius=0, scrollbar_button_color="#0B121F",
                                               scrollbar_button_hover_color="#0B121F")
@@ -62,12 +63,44 @@ class MainPageGUI(ctk.CTkFrame):
                 cursor="hand2"
             )
             btn.grid(row=row, column=col, padx=16, pady=16)
-            btn.bind("<Button-1>", lambda event, m=movie: self.on_movie_click(m))
+            btn.bind("<Button-1>", lambda event, t=title: self.on_movie_click(t))
             if col == 1:
                 col = 0
                 row += 1
             else:
                 col += 1
+    def on_search(self, event):
+        query = self.enter_search.get()
+        
+        if query:
+            print(f"Шукаю: {query}") 
+            movie_data = self.db_manager.get_movies(query)
+            
+            if movie_data:
+                print(f"Знайдено: {movie_data[0]}")
+                cfg.FilmName = movie_data[0]
+                cfg.ImageFileName = movie_data[1]
+                cfg.Price = movie_data[2]
+                cfg.Description = movie_data[3]
+                self.callback("Details")
 
-    def on_movie_click(self, movie_data):
-        self.callback("Details", movie_data)
+                self.enter_search.delete(0, "end")
+            else:
+                print("Фільм не знайдено.")
+                self.enter_search.configure(border_color="red")
+        else:
+            self.enter_search.configure(border_color=self.assets.Gold)
+
+    def on_movie_click(self, title):
+        print(f"Клікнули на: {title}. Роблю запит в БД...")
+        full_movie_data = self.db_manager.get_movies(title)
+        
+        if full_movie_data:
+            cfg.FilmName = full_movie_data[0]
+            cfg.ImageFileName = full_movie_data[1]
+            cfg.Price = full_movie_data[2]
+            cfg.Description = full_movie_data[3]
+            
+            self.callback("Details")
+        else:
+            print("Помилка: Не вдалося завантажити дані про фільм.")

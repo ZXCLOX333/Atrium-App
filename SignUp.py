@@ -8,7 +8,7 @@ class SignUpGUI(ctk.CTkFrame):
         super().__init__(master)
         self.callback = switch_callback
         self.assets = st.AppStyles()
-        bg = self.assets.raw_images["Bg.png"].copy()
+        bg = self.assets.raw_images["Bg"].copy()
 
         draw = ImageDraw.Draw(bg)
         draw.text(xy=(self.assets.mw+43,200),text='Become a member', fill='white', font=self.assets.H1_Pil, anchor='mt')
