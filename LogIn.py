@@ -1,7 +1,8 @@
 import customtkinter as ctk
 import Style as st
+import config as cfg
 from PIL import Image, ImageDraw, ImageFont
-from Database import DatabaseManager  # Імпортуємо наш клас бази даних
+from Database import DatabaseManager  
 
 class LogInApp(ctk.CTkFrame):
      
@@ -9,12 +10,10 @@ class LogInApp(ctk.CTkFrame):
         super().__init__(master)
         self.callback = switch_callback
         self.assets = st.AppStyles()
-        self.master = master # Зберігаємо посилання на MainApp
+        self.master = master 
 
-        # --- Фон ---
         bg = self.assets.raw_images["Bg"].copy()
         draw = ImageDraw.Draw(bg)
-        # Перекладені тексти
         draw.text((self.assets.mw+30, 207), "Welcome back.", fill=self.assets.White, font=self.assets.H1_Pil, anchor="mt")
         draw.text((30, 400), "Login", fill=self.assets.LightGray, font=self.assets.Crumbs_Pil, anchor="lt")
         draw.text((30, 500), "Password", fill=self.assets.LightGray, font=self.assets.Crumbs_Pil, anchor="lt")
@@ -22,8 +21,7 @@ class LogInApp(ctk.CTkFrame):
         bg_image = ctk.CTkImage(light_image=bg, size=(375, 812))
         self.background = ctk.CTkLabel(self, text="", image=bg_image)
         self.background.pack()
-    
-        # --- Кнопки посилань ---
+
         x, y = 25, 480
         w, h = 112, 30
         self.BtnForgotPassword = ctk.CTkLabel(self, text="Forgot password?", image=self.assets.camuflage(x,y,w,h), font=self.assets.Crumbs, cursor="hand2")
@@ -44,18 +42,15 @@ class LogInApp(ctk.CTkFrame):
         self.error_label = ctk.CTkLabel(self, text="", text_color="#FF4444", font=("Arial", 12), width = 150, height = h, image = self.assets.camuflage(self.assets.mw, 530, 150, h))
         self.error_label.place(y=530, x=self.assets.mw, anchor="center")
 
-        # --- Головна кнопка входу ---
         self.BtnEnter = ctk.CTkButton(self, text="", image=self.assets.images["BtnEnter"], hover=False, border_width=0, width=327, height=55, fg_color="#040D20", corner_radius=0)
         self.BtnEnter.place(y=770, x=self.assets.mw, anchor="center")
-        
-        # Прив'язуємо клік до логіки бази даних
+
         self.BtnEnter.bind("<Button-1>", self.on_login_click)
 
     def on_login_click(self, event=None):
         email = self.EnterLogin.get()
         password = self.EnterPassword.get()
         
-        # Проста перевірка на порожні поля
         if not email or not password:
             self.error_label.configure(text="Please fill in all fields")
             return
@@ -65,17 +60,15 @@ class LogInApp(ctk.CTkFrame):
         
         if user:
             print(f"Login is succesfull: {user['name']}")
-            self.error_label.configure(text="") # Очистити помилки
-            
-            # Зберігаємо сесію користувача в MainApp
-            self.master.current_user = user 
-            
-            # Очищаємо поля для безпеки
+            self.error_label.configure(text="")
+
+            cfg.UserName = user['name']  
+            cfg.UserEmail = email        
+
             self.EnterLogin.delete(0, 'end')
             self.EnterPassword.delete(0, 'end')
             
-            # Переходимо на головну
             self.callback("Main") 
         else:
             print("Login error")
-            self.error_label.configure( text="Incorrect login or password")
+            self.error_label.configure(text="Incorrect login or password")

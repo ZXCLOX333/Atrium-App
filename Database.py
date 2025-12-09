@@ -4,7 +4,7 @@ class DatabaseManager:
     def __init__(self):
         self.conn_str = (
             "Driver={SQL Server};" 
-            "Server=DESKTOP-5TIDMAG\SQLEXPRESS;"  
+            "Server=DESKTOP-5TIDMAG\\SQLEXPRESS;" 
             "Database=AtriumDB;"
             "Trusted_Connection=yes;"
         )
@@ -56,11 +56,55 @@ class DatabaseManager:
             print(f"Помилка: {e}")
             return None 
         
+    def register_user(self, fullname, email, password):
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            query = "INSERT INTO Users (FullName, Email, Password) VALUES (?, ?, ?)"
+            cursor.execute(query,(fullname, email, password))
+            conn.commit()
+            conn.close()
+            return True, "Succes"
+        except pyodbc.IntegrityError:
+            return False, "Email already registered."
+        except pyodbc.Error as e:
+            print(f"SQL Error: {e}")
+            return False, "Password doesn`t meet requirements (Need: A-Z, 0-9, special char)."
+        except Exception as e:
+            return False, str(e)
+        
+    def check_email_exists(self, email):
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            cursor.execute("SELECT UserID FROM Users WHERE Email = ?", (email,))
+            result = cursor.fetchone()
+            conn.close()
+            return result is not None
+        except:
+            return False
+
+
+    def update_password(self, email, new_password):
+        try:
+            conn = pyodbc.connect(self.conn_str)
+            cursor = conn.cursor()
+            cursor.execute(
+                "UPDATE Users SET Password = ? WHERE Email = ?", 
+                (new_password, email)
+            )
+            conn.commit()
+            conn.close()
+            return True
+        except Exception as e:
+            print("Password update error:", e)
+            return False
+
 if __name__ == "__main__":
     db = DatabaseManager()
     print("Тестуємо підключення...")
     try:
-        movies = db.get_movies()
+        movies = db.get_all_movies()
         print(f"Підключення успішне. Знайдено фільмів: {len(movies)}")
     except Exception as e:
         print(f"Підключення не вдалося: {e}")

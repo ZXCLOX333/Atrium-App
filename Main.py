@@ -28,6 +28,8 @@ class MainApp(ctk.CTk):
 
         self.current_user = None 
 
+        print("!!! Я ЗАВАНТАЖИВ ПРАВИЛЬНИЙ ФАЙЛ !!!")
+        
         self.setup_gemini()
         self.recognizer = sr.Recognizer()
 
